@@ -1,3 +1,5 @@
+-- Remaked some guy's Autopainter. Less CPU + Better AP
+
 -- Settings --
 
 local color = Color3.fromRGB(255,255,255)
@@ -110,11 +112,11 @@ local dragInput
 local dragStart
 local startPos
 
--- Paint engine (per-province coroutines, global rate limiter) --
+-- Paint engine (configurable shit, ez to use)
 
-local NORMAL_MAX = 50    -- paints per window in normal mode
-local FAST_MAX   = 200   -- paints per window in fast paint mode
-local RATE_WINDOW = 0.5  -- seconds per window
+local NORMAL_MAX = 50    -- paints per window in normal
+local FAST_MAX   = 200   -- paints per window in fast paint
+local RATE_WINDOW = 0.5  -- w/s (seconds per window)
 
 local paintCount = 0
 local paintResetTime = 0
@@ -164,7 +166,7 @@ local function startProvincePainter(info)
 			end)
 		end
 
-		-- Auto cleanup if province was destroyed externally
+		-- Auto cleanup if province was destroyed
 		if not province.Parent then
 			removeProvince(province)
 		end
@@ -174,7 +176,6 @@ end
 -- Province management --
 
 local function addProvince(province)
-	-- Duplicate guard
 	for _, info in ipairs(provinces) do
 		if info.Province == province then return end
 	end
@@ -188,7 +189,7 @@ local function addProvince(province)
 	local info = {
 		Province = province,
 		Highlight = clone,
-		SavedColor = color,  -- save the active color at the time of adding
+		SavedColor = color,
 		InFlight = 0,
 		Active = true
 	}
